@@ -31,43 +31,51 @@ figma.ui.onmessage = msg => {
     console.log(msg)
 
     if (msg.type === "main" && msg.status) {
+        textNodes = [];
         main = true
         textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE");
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
         console.log(allTextNodes.length)
-    } else {
+    }
+
+    if (msg.type === "main" && !msg.status) {
         main = false
         adb(allTextNodes, textNodes)
+        textNodes = [];
     }
 
 
     if (msg.type === "instance" && msg.status) {
+        textNodes = [];
         instance = true
         textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "COMPONENT");
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
         console.log(allTextNodes.length)
-    } else {
+    }
+
+    if (msg.type === "instance" && !msg.status) {
         instance = false
         adb(allTextNodes, textNodes)
+        textNodes = [];
     }
 
 
+    if (!(main && instance)) {
+        allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT");
+    }
+    if (main && instance) {
+        allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
+    }
     if (msg.type === "runBtn") {
-        if (!(main && instance)) {
-            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT");
-        }
-        if (main && instance) {
-            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
-        }
         console.log(allTextNodes.length)
         allTextNodes.forEach(item => {
             console.log(item.name)
         })
-        Run()
+        // Run()
     }
 };
 
