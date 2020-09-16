@@ -20,14 +20,11 @@ function adb(arr1, arr2) {
     }
 }
 
-function all() {
-    allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
-}
-
 function Run() {
     allTextNodes.map(item => {
         item.autoRename = true
     })
+    // figma.closePlugin();
 }
 
 figma.ui.onmessage = msg => {
@@ -64,13 +61,13 @@ figma.ui.onmessage = msg => {
             allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT");
         }
         if (main && instance) {
-            all()
+            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
         }
         console.log(allTextNodes.length)
         allTextNodes.forEach(item => {
             console.log(item.name)
         })
-        // Run()
+        Run()
     }
 };
 
