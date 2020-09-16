@@ -1,0 +1,145 @@
+<main>
+  <div class="controller">
+    <h2>Includes:</h2>
+    <div>
+      <input type="checkbox" name="main" id="main" />
+      <label for="main">Main Componnet</label>
+    </div>
+    <div>
+      <input type="checkbox" name="instance" id="instance" />
+      <label for="instance">Instance</label>
+    </div>
+  </div>
+  <a id="runBtn">Run</a>
+  <footer>
+    Made by <a target="_blank" href="https://figma.cool">Figma.Cool</a>
+  </footer>
+</main>
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.8);
+    text-decoration: none;
+  }
+  .controller {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
+  }
+  .controller h2 {
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .controller > div {
+    margin-bottom: 4px;
+  }
+  .controller > div label {
+    display: flex;
+    align-items: center;
+  }
+  input[type="checkbox"] {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+  }
+  label::before {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    box-sizing: border-box;
+    border-radius: 2px;
+    margin-right: 10px;
+  }
+  input[type="checkbox"]:checked + label::before {
+    background-color: #18a0fb;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABmSURBVHgB7Y3RCYAwDAXfCI7gCG7kKDpKNnMER4hRWtAiFukL/cnB/d4BQdAdVR3NzZzB5hbP8CYv8RP5Exg844u5m5NXPPOYNMdTZC0C14QSr0w48Y8JL16ZCJgUE4EHaSIIgi4ci1w3H/5PUqwAAAAASUVORK5CYII=");
+    background-size: cover;
+    background-position: cover;
+    border: 1px solid #18a0fb;
+  }
+  #runBtn {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 12px;
+    width: calc(100% - 32px);
+    height: 30px;
+    background: #18a0fb;
+    border-radius: 6px;
+    margin: 0 16px 8px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    transition: all 0.2s ease;
+  }
+  #runBtn:hover {
+    opacity: 0.9;
+  }
+  footer {
+    z-index: 999;
+    width: 100%;
+    padding: 8px 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    text-align: right;
+    font-size: 10px;
+    line-height: 10px;
+    color: #8b8eab;
+    border-top: 1px solid #e5e5e5;
+  }
+  a {
+    font-size: 10px;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  const main = document.querySelector("#main");
+  const instance = document.querySelector("#instance");
+  const runBtn = document.querySelector("#runBtn");
+
+  main.addEventListener("change", () => {
+    if (main.checked) {
+      parent.postMessage(
+        { pluginMessage: { type: "main", status: true } },
+        "*"
+      );
+    } else {
+      parent.postMessage(
+        { pluginMessage: { type: "main", status: false } },
+        "*"
+      );
+    }
+  });
+  instance.addEventListener("change", () => {
+    if (instance.checked) {
+      parent.postMessage(
+        { pluginMessage: { type: "instance", status: true } },
+        "*"
+      );
+    } else {
+      parent.postMessage(
+        { pluginMessage: { type: "instance", status: false } },
+        "*"
+      );
+    }
+  });
+  runBtn.addEventListener("click", () => {
+    parent.postMessage(
+      { pluginMessage: { type: "runBtn", status: true } },
+      "*"
+    );
+  });
+</script>
