@@ -24,58 +24,58 @@ function Run() {
     allTextNodes.map(item => {
         item.autoRename = true
     })
-    // figma.closePlugin();
+    figma.closePlugin();
 }
 
 figma.ui.onmessage = msg => {
     console.log(msg)
 
     if (msg.type === "main" && msg.status) {
+        adb(allTextNodes, textNodes)
         textNodes = [];
         main = true
         textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE");
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
-        console.log(allTextNodes.length)
+        console.log("main" + allTextNodes.length)
     }
 
     if (msg.type === "main" && !msg.status) {
-        main = false
         adb(allTextNodes, textNodes)
         textNodes = [];
+        main = false
     }
 
 
     if (msg.type === "instance" && msg.status) {
+        adb(allTextNodes, textNodes)
         textNodes = [];
         instance = true
         textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "COMPONENT");
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
-        console.log(allTextNodes.length)
+        console.log("instance" + allTextNodes.length)
     }
 
     if (msg.type === "instance" && !msg.status) {
-        instance = false
         adb(allTextNodes, textNodes)
         textNodes = [];
+        instance = false
     }
 
-
-    if (!(main && instance)) {
-        allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT");
-    }
-    if (main && instance) {
-        allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
-    }
     if (msg.type === "runBtn") {
-        console.log(allTextNodes.length)
+        if (!main && !instance) {
+            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT");
+        }
+        if (main && instance) {
+            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
+        }
         allTextNodes.forEach(item => {
-            console.log(item.name)
+            console.log("runBtn" + item.name)
         })
-        // Run()
+        Run()
     }
 };
 
