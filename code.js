@@ -24,11 +24,12 @@ function Run() {
     allTextNodes.map(item => {
         item.autoRename = true
     })
+    figma.notify("✅Done")
     figma.closePlugin();
 }
 
 figma.ui.onmessage = msg => {
-    console.log(msg)
+    // console.log(msg)
 
     if (msg.type === "main" && msg.status) {
         adb(allTextNodes, textNodes)
@@ -38,7 +39,10 @@ figma.ui.onmessage = msg => {
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
-        console.log("main" + allTextNodes.length)
+        // console.log("main" + allTextNodes.length)
+        figma.ui.postMessage({
+            mainNum: textNodes.length
+        })
     }
 
     if (msg.type === "main" && !msg.status) {
@@ -56,7 +60,10 @@ figma.ui.onmessage = msg => {
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
-        console.log("instance" + allTextNodes.length)
+        // console.log("instance" + allTextNodes.length)
+        figma.ui.postMessage({
+            insNum: textNodes.length
+        })
     }
 
     if (msg.type === "instance" && !msg.status) {
@@ -72,9 +79,9 @@ figma.ui.onmessage = msg => {
         if (main && instance) {
             allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
         }
-        allTextNodes.forEach(item => {
-            console.log("runBtn" + item.name)
-        })
+        // allTextNodes.forEach(item => {
+        //     console.log("runBtn" + item.name)
+        // })
         Run()
     }
 };

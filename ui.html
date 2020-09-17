@@ -3,11 +3,11 @@
     <h2>Includes:</h2>
     <div>
       <input type="checkbox" name="main" id="main" />
-      <label for="main">Main Componnet</label>
+      <label for="main">Main Componnet<i id="mainNum"></i></label>
     </div>
     <div>
       <input type="checkbox" name="instance" id="instance" />
-      <label for="instance">Instance</label>
+      <label for="instance">Instance<i id="insNum"></i></label>
     </div>
   </div>
   <a id="runBtn">Run</a>
@@ -56,6 +56,17 @@
     box-sizing: border-box;
     border-radius: 2px;
     margin-right: 10px;
+  }
+  label {
+    position: relative;
+  }
+  label i {
+    text-align: right;
+    position: absolute;
+    right: 0;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 700;
   }
   input[type="checkbox"]:checked + label::before {
     background-color: #18a0fb;
@@ -109,14 +120,21 @@
   const main = document.querySelector("#main");
   const instance = document.querySelector("#instance");
   const runBtn = document.querySelector("#runBtn");
+  const mainNum = document.querySelector("#mainNum");
+  const insNum = document.querySelector("#insNum");
 
   main.addEventListener("change", () => {
     if (main.checked) {
+      window.onmessage = async (event) => {
+        pmsg = event.data.pluginMessage;
+        mainNum.innerHTML = pmsg.mainNum;
+      };
       parent.postMessage(
         { pluginMessage: { type: "main", status: true } },
         "*"
       );
     } else {
+      mainNum.innerHTML = "";
       parent.postMessage(
         { pluginMessage: { type: "main", status: false } },
         "*"
@@ -125,11 +143,16 @@
   });
   instance.addEventListener("change", () => {
     if (instance.checked) {
+      window.onmessage = async (event) => {
+        pmsg = event.data.pluginMessage;
+        insNum.innerHTML = pmsg.insNum;
+      };
       parent.postMessage(
         { pluginMessage: { type: "instance", status: true } },
         "*"
       );
     } else {
+      insNum.innerHTML = "";
       parent.postMessage(
         { pluginMessage: { type: "instance", status: false } },
         "*"
