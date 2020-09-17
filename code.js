@@ -1,9 +1,15 @@
 figma.showUI(__html__, { width: 200, height: 174 });
 
 let allTextNodes = [];
-let textNodes = []
+let textNodes = [];
 let main = false;
 let instance = false;
+const normalTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT" && node.autoRename === false);
+// let allNumCount = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT" && node.autoRename === false);
+
+// figma.ui.postMessage({
+//     allNum: allNumCount.length
+// })
 
 //减去重叠
 function adb(arr1, arr2) {
@@ -24,7 +30,7 @@ function Run() {
     allTextNodes.map(item => {
         item.autoRename = true
     })
-    figma.notify("✅Done")
+    figma.notify("👏 Done")
     figma.closePlugin();
 }
 
@@ -35,13 +41,13 @@ figma.ui.onmessage = msg => {
         adb(allTextNodes, textNodes)
         textNodes = [];
         main = true
-        textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE");
+        textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.autoRename === false);
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
         // console.log("main" + allTextNodes.length)
         figma.ui.postMessage({
-            mainNum: textNodes.length
+            mainNum: (textNodes.length - normalTextNodes.length)
         })
     }
 
@@ -56,13 +62,13 @@ figma.ui.onmessage = msg => {
         adb(allTextNodes, textNodes)
         textNodes = [];
         instance = true
-        textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "COMPONENT");
+        textNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "COMPONENT" && node.autoRename === false);
         textNodes.forEach(i => {
             allTextNodes.push(i)
         });
         // console.log("instance" + allTextNodes.length)
         figma.ui.postMessage({
-            insNum: textNodes.length
+            insNum: textNodes.length - normalTextNodes.length
         })
     }
 
@@ -74,10 +80,10 @@ figma.ui.onmessage = msg => {
 
     if (msg.type === "runBtn") {
         if (!main && !instance) {
-            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT");
+            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.parent.type != "INSTANCE" && node.parent.type != "COMPONENT" && node.autoRename === false);
         }
         if (main && instance) {
-            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT");
+            allTextNodes = figma.currentPage.findAll((node) => node.type === "TEXT" && node.autoRename === false);
         }
         // allTextNodes.forEach(item => {
         //     console.log("runBtn" + item.name)
@@ -85,6 +91,3 @@ figma.ui.onmessage = msg => {
         Run()
     }
 };
-
-
-
